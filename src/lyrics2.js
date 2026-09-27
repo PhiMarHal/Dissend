@@ -499,7 +499,7 @@ T2.L036 = { // Fear blooms backwards in this tree of trajectories.
     }
   },
 };
-T2.L037 = { pre: 0.05, post: 0.35, draw(ctx, S, L, lt, dur) { dropColumn(ctx, S, L, S.W * 0.78, S.H * 0.5 - 230, 230, lt, { font: 'gothic', fill: P.red, times: charTimes(L, 0.25), exitAt: dur }); } };
+T2.L037 = { pre: 0.05, post: 0.35, draw(ctx, S, L, lt, dur) { dropColumn(ctx, S, L, S.W * 0.28, S.H * 0.5 - 230, 230, lt, { font: 'gothic', fill: P.red, times: charTimes(L, 0.25), exitAt: dur }); } };
 T2.L038 = { pre: 0, post: 0.5, draw(ctx, S, L, lt, dur) { bigWord(ctx, S, 'DOWN.', S.W * 0.4, S.H * 0.52, 400, lt, dur, { fill: P.ink }); } };
 
 // The crown of whispers: text carried on a spinning, tilted ring.
