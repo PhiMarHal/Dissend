@@ -4,6 +4,20 @@ A code-rendered music video for **Dissend**. Every frame is drawn with the
 Canvas 2D API from plain JavaScript; the soundtrack is the original
 `Dissend.webm` Opus stream, copied into the video bit-for-bit (never re-encoded).
 
+## Watch
+
+- **`Dissend-music-video.mp4`** — 1920×1080, 60 fps, HEVC (two-pass, sized
+  under GitHub's 100 MB file limit), with the original Opus audio.
+- **Full-quality master** (1920×1080, 60 fps, H.264 CRF 20, ≈500 MB — too
+  large for the repository): `npm install && node tools/render.mjs` writes it
+  to `out/Dissend.mp4` in about 18 minutes on 4 cores.
+
+Both carry the Opus stream from `Dissend.webm` untouched (packet-for-packet
+identical). Opus-in-MP4 plays in VLC, mpv, IINA, Chrome, Firefox and Edge;
+Apple's QuickTime Player does not decode Opus — for that one player,
+`ffmpeg -i Dissend-music-video.mp4 -c:v copy -c:a aac -b:a 320k qt.mp4`
+makes a compatible copy (the audio is then re-encoded).
+
 ## The idea
 
 The song is a fall that turns out to be a release: *落ちる / Fall*, the cage
