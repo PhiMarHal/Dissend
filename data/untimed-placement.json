@@ -1,0 +1,24 @@
+{
+  "about": "Display-only placements for source lines that have no reviewed vocal timing (they are not audibly sung, but are shown as text). These are visual decisions, not vocal timings: edit start/end freely. `pairs_with` names the reviewed line each one is typeset against. lyrics.json stays the untouched source of truth for everything that is sung.",
+  "placements": [
+    { "source_line_id": "L018", "language": "en", "text": "Freeeedom!", "start": 74.9, "end": 79.0, "pairs_with": "L017" },
+    { "source_line_id": "L020", "language": "en", "text": "Birds of stone and steel and steam rapidly gaining speed.", "start": 81.4, "end": 86.1, "pairs_with": "L019" },
+    { "source_line_id": "L022", "language": "en", "text": "Freeeedom!", "start": 87.3, "end": 91.5, "pairs_with": "L021" },
+    { "source_line_id": "L024", "language": "en", "text": "Journey across cloud and flame in a run that never ends.", "start": 97.8, "end": 104.8, "pairs_with": "L023" },
+
+    { "source_line_id": "L042", "language": "en", "text": "Freeeedom!", "start": 159.7, "end": 163.4, "pairs_with": "L041" },
+    { "source_line_id": "L044", "language": "en", "text": "Birds of stone and steel and steam rapidly gaining speed.", "start": 165.5, "end": 170.3, "pairs_with": "L043" },
+    { "source_line_id": "L046", "language": "en", "text": "Freeeedom!", "start": 171.5, "end": 175.2, "pairs_with": "L045" },
+    { "source_line_id": "L048", "language": "en", "text": "Journey across cloud and flame in a run that never ends.", "start": 181.6, "end": 189.0, "pairs_with": "L047" },
+
+    { "source_line_id": "L052", "language": "en", "text": "Scent, shadow, sound, echo.", "start": 196.4, "end": 200.5, "pairs_with": "L051" },
+    { "source_line_id": "L056", "language": "en", "text": "Waning, waning, waning, waning, waning, waning, Groooowing.", "start": 202.2, "end": 207.2, "pairs_with": "L055" },
+    { "source_line_id": "L060", "language": "en", "text": "Feathers stretch, bindings part, skyline bends, eagle soars.", "start": 208.2, "end": 213.0, "pairs_with": "L059" },
+    { "source_line_id": "L061", "language": "ja", "text": "下へ", "start": 212.9, "end": 213.35, "pairs_with": "L062" },
+    { "source_line_id": "L064", "language": "en", "text": "Fall down, fall down, fall down, fall down...", "start": 214.2, "end": 218.3, "pairs_with": "L063" },
+
+    { "source_line_id": "L068", "language": "en", "text": "Birds of stone and steel and steam rapidly gaining speed.", "start": 225.4, "end": 230.2, "pairs_with": "L067" },
+    { "source_line_id": "L070", "language": "en", "text": "Freeeedom!", "start": 231.4, "end": 235.8, "pairs_with": "L069" },
+    { "source_line_id": "L072", "language": "en", "text": "Journey across cloud and flame in a run that never ends.", "start": 241.6, "end": 250.0, "pairs_with": "L071" }
+  ]
+}
