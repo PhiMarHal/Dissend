@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dissend — live player</title>
+<style>
+  :root { --paper: #EBE1CE; --ink: #131010; --red: #D4271E; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; background: var(--ink); color: var(--paper); font: 13px/1.4 ui-monospace, Menlo, monospace; }
+  body { display: grid; grid-template-rows: 1fr auto; }
+  #stage { display: grid; place-items: center; min-height: 0; padding: 12px; }
+  canvas { max-width: 100%; max-height: 100%; aspect-ratio: 16 / 9; background: #000; }
+  #bar { display: flex; gap: 12px; align-items: center; padding: 10px 16px; border-top: 1px solid #2c2522; }
+  button { background: var(--red); color: var(--paper); border: 0; padding: 6px 14px; font: inherit; cursor: pointer; }
+  input[type=range] { flex: 1; accent-color: var(--red); }
+  #msg { position: fixed; inset: 0; display: grid; place-items: center; pointer-events: none; }
+</style>
+</head>
+<body>
+<div id="stage"><canvas id="c"></canvas></div>
+<div id="bar">
+  <button id="play">Play</button>
+  <input id="seek" type="range" min="0" max="271.5" step="0.01" value="0">
+  <span id="time">0:00.00</span>
+  <span id="fps"></span>
+</div>
+<div id="msg">loading…</div>
+<audio id="audio" src="Dissend.webm" preload="auto"></audio>
+<script type="module">
+  // Same scene code as the offline renderer; needs to be served over http
+  // (e.g. `npx http-server -c-1 .`) so modules, fonts and JSON can load.
+  import { FONTS } from './src/type.js';
+  import { createVideo } from './src/video.js';
+
+  const params = new URLSearchParams(location.search);
+  const scale = parseFloat(params.get('scale') || '0.5');
+  const msg = document.getElementById('msg');
+  const json = (f) => fetch('data/' + f).then((r) => r.json());
+  await Promise.all(Object.values(FONTS).map(async (f) => {
+    const face = new FontFace(f.family, `url(assets/fonts/${f.file})`);
+    await face.load();
+    document.fonts.add(face);
+  }));
+  const [lyrics, music, beats, envelope, placements] = await Promise.all(
+    ['lyrics.json', 'music.json', 'beats.json', 'envelope.json', 'untimed-placement.json'].map(json));
+  const makeCanvas = (w, h) => Object.assign(document.createElement('canvas'), { width: w, height: h });
+  const video = createVideo({ scale, data: { lyrics, music, beats, envelope, placements }, makeCanvas });
+  const canvas = document.getElementById('c');
+  canvas.width = video.PW;
+  canvas.height = video.PH;
+  const ctx = canvas.getContext('2d');
+  msg.remove();
+
+  const audio = document.getElementById('audio');
+  const seek = document.getElementById('seek');
+  const time = document.getElementById('time');
+  const fpsEl = document.getElementById('fps');
+  const play = document.getElementById('play');
+  const fmt = (t) => `${Math.floor(t / 60)}:${(t % 60).toFixed(2).padStart(5, '0')}`;
+  const start = parseFloat(params.get('t') || '0');
+  audio.currentTime = start;
+  let scrubbing = false, last = performance.now(), frames = 0;
+  play.onclick = () => (audio.paused ? audio.play() : audio.pause());
+  audio.onplay = () => (play.textContent = 'Pause');
+  audio.onpause = () => (play.textContent = 'Play');
+  seek.oninput = () => { scrubbing = true; audio.currentTime = +seek.value; };
+  seek.onchange = () => (scrubbing = false);
+  addEventListener('keydown', (e) => {
+    if (e.code === 'Space') { e.preventDefault(); play.onclick(); }
+    if (e.code === 'ArrowLeft') audio.currentTime -= e.shiftKey ? 0.1 : 2;
+    if (e.code === 'ArrowRight') audio.currentTime += e.shiftKey ? 0.1 : 2;
+  });
+  function tick() {
+    const t = audio.currentTime;
+    video.render(ctx, canvas, t);
+    if (!scrubbing) seek.value = t;
+    time.textContent = fmt(t);
+    frames++;
+    const now = performance.now();
+    if (now - last > 1000) { fpsEl.textContent = frames + ' fps'; frames = 0; last = now; }
+    requestAnimationFrame(tick);
+  }
+  tick();
+</script>
+</body>
+</html>

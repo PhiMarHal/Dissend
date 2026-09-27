@@ -1,0 +1,119 @@
+# Dissend — music video
+
+A code-rendered music video for **Dissend**. Every frame is drawn with the
+Canvas 2D API from plain JavaScript; the soundtrack is the original
+`Dissend.webm` Opus stream, copied into the video bit-for-bit (never re-encoded).
+
+## Watch
+
+- **`Dissend-music-video.mp4`** — 1920×1080, 60 fps, HEVC (two-pass, sized
+  under GitHub's 100 MB file limit), with the original Opus audio.
+- **Full-quality master** (1920×1080, 60 fps, H.264 CRF 20, ≈500 MB — too
+  large for the repository): `npm install && node tools/render.mjs` writes it
+  to `out/Dissend.mp4` in about 18 minutes on 4 cores.
+
+Both carry the Opus stream from `Dissend.webm` untouched (packet-for-packet
+identical). Opus-in-MP4 plays in VLC, mpv, IINA, Chrome, Firefox and Edge;
+Apple's QuickTime Player does not decode Opus — for that one player,
+`ffmpeg -i Dissend-music-video.mp4 -c:v copy -c:a aac -b:a 320k qt.mp4`
+makes a compatible copy (the audio is then re-encoded).
+
+## The idea
+
+The song is a fall that turns out to be a release: *落ちる / Fall*, the cage
+left behind, *じゆう / Freedom*. The video treats descent as the act of
+dissent — every border, rule and frame the camera meets is something to
+break through on the way down.
+
+- **Three inks on paper.** Beige paper, vermilion, black. Flat shapes,
+  halftone screens and manga speed/focus lines, printed over a static paper
+  tooth. Impacts are hard 2–3 frame strobes, never soft fades, so the palette
+  never drifts into pinks or greys.
+- **Always falling.** A fall-speed curve is integrated from the song's
+  measured energy; mist bands, halftone clouds, speed lines, stars and glyphs
+  all rise past the camera at that speed.
+- **The phoenix.** The protagonist flies on the beat: it swerves to a new lane every bar, flicks upward with wings flared, then folds and dives hard, trailing fire.
+- **Barriers break.** Verse 1 is printed inside a bordered frame (a limit);
+  the first chorus shatters it and the rest of the film is full-bleed. Ruled
+  lines rise to meet the phoenix and splinter; frames rush at the
+  camera and fly apart on the beat.
+- **Type is the image.** Japanese is set vertically (tategaki), in the
+  direction of the fall. Each line has its own treatment: じゆう's long-vowel
+  mark stretches into an endless line; FREEEEDOM's E's widen like a held
+  note; 逆さに is literally turned upside down and "backwards" is mirrored;
+  "lighter" thins from Black to Thin weight; the crown of whispers is text on
+  a spinning ring; 薄れ fades six times before 広がる outgrows the frame.
+
+## Storyboard
+
+| time | section | picture |
+| --- | --- | --- |
+| 0:00 | intro | A dark lid opens into sky. A phoenix perches on a ledge above the hanging title; it flares, launches, flips and dives, carving S-curves through barriers that splinter. |
+| 0:25 | verse 1 | 落ちる / FALL. (its red full stop becomes a falling point). Two crossed hands against the sun part slowly, and light bursts through the gaps between the fingers. A winged eye opens on the horizon. The drop: focus lines. 形・移ろい・脱ぎ・沈む and SHAPES / SHIFT / SHED / SINK. We fall out through the bottom of a birdcage and watch it shrink to nothing. |
+| 1:14 | chorus 1 | The border shatters; the world turns red. The endless じゆう line, a flock of stone, steel and steam swifts, clouds and flames, an endless ticker tape. |
+| 1:38 | instrumental | Journey tapes; a tunnel of frames that break on each beat. |
+| 1:50 | verse 2 | Night and stardust, then dawn rising in strata as the words lose weight. An inverted tree of trajectories whose red petals fly *up* to bloom backwards. An ornate crown of whispers — text engraved on its spinning band — spinning down with us. |
+| 2:39 | chorus 2 | The chorus again in black and red. |
+| 3:02 | breakdown | Suspension — the phoenix hangs in the updraft, wings wide; then one last lift and it folds into a dive. |
+| 3:14 | verse 3 | The peak: a manga page for 香り・影・声・木霊; waning/growing; feathers stretch, bindings part, the skyline bends, an eagle soars; 落ちる ×4 cascading. |
+| 3:38 | chorus 3 | The biggest: FREEEEDOM sung, everything at full speed. |
+| 4:02 | outro | The run that never ends; everything we passed rises past once more; a rain of every glyph in the song; the sky opens to paper, the phoenix rises away on open wings, and a single red point falls through the last line. |
+
+## Lyrics and timing
+
+- `data/lyrics.json` — the reviewed lyrics and timings, **unchanged**. Every
+  sung line appears at its reviewed start/end; overlapping lines are drawn
+  simultaneously. Retained automatic per-character timings are used only to
+  stagger glyph entrances.
+- `data/untimed-placement.json` — the 16 lines that are not audibly sung
+  (mostly the English chorus lines) are still shown. This file holds their
+  *display* placement next to the line they translate; these are visual
+  choices, not vocal timings — edit them freely.
+- `data/music.json`, `data/beats.json` — supplied analysis (energy/activity
+  curves drive speed and density; the beat grid drives the frame tunnel and
+  bar-level colour flips).
+- `data/envelope.json` — fast bass/attack envelopes generated by
+  `tools/analyze_audio.py`, used for small camera pulses.
+
+## Rendering
+
+Requires Node 18+ and an `ffmpeg` on `PATH` with libx264.
+
+```sh
+npm install
+node tools/render.mjs                                   # 1920x1080 @ 60 fps -> out/Dissend.mp4
+node tools/render.mjs --scale 0.5 --fps 30              # quick 960x540 preview
+node tools/render.mjs --from 70 --to 100                # just a time range
+node tools/still.mjs 50.1 73.9 --scale 0.5              # single frames as PNG
+node tools/still.mjs 60:75:1 --scale 0.25 --sheet v1    # contact sheet
+```
+
+Frames are rendered by parallel worker processes (one per CPU core), each
+piping raw frames into its own x264 encoder; the chunks are concatenated
+without re-encoding and the audio is stream-copied from `Dissend.webm`.
+
+To scrub it live in a browser, serve the folder and open `player.html`
+(`npx http-server -c-1 .`, then `http://localhost:8080/player.html?t=73`;
+add `&scale=1` for full resolution). Space plays/pauses, arrows seek.
+
+## Code map
+
+| file | role |
+| --- | --- |
+| `src/video.js` | frame pipeline: state, camera, post (strobe, RGB split, slice tear, paper) |
+| `src/timeline.js` | data → time lookups (lines, curves, beats, onsets) |
+| `src/scenes.js` | intro and verse 1 worlds, impacts, fall speed, the breakable border |
+| `src/scenes2.js` | choruses, instrumental tunnel, verse 2 worlds (night, dawn, tree, crown) |
+| `src/scenes3.js` | breakdown, verse 3, outro |
+| `src/lyrics.js`, `lyrics2.js`, `lyrics3.js` | one typographic treatment per lyric line id |
+| `src/typefx.js`, `src/type.js` | glyph layout (horizontal and vertical), shared type effects |
+| `src/phoenix.js` | the phoenix and its beat-locked flight controller and fire trail |
+| `src/motifs.js`, `src/layers.js` | drawn motifs: cage, winged eye, swifts, eagle, feathers, ukiyo-e clouds, flames, halftone, speed and focus lines |
+| `tools/` | renderer, still/contact-sheet tool, audio analysis, font builder |
+
+## Fonts
+
+Subsets of Noto Serif JP, Dela Gothic One, Anton, Instrument Serif and
+Archivo, all under the SIL Open Font License (licences in `assets/fonts/`).
+`tools/build_fonts.py` rebuilds the subsets from the upstream Google Fonts
+files.

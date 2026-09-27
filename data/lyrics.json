@@ -1,0 +1,1007 @@
+{
+  "schema_version": "2.0",
+  "title": "Dissend v6 by PHI",
+  "audio": {
+    "filename": "Dissend v6 by PHI.webm",
+    "duration_seconds": 271.512,
+    "decoded_duration_seconds": 271.5,
+    "sha256": "bbf20fd7b4f7e9014ea36379d607e06d273fc3ce83a37897f81861cba33a5e95",
+    "time_origin": "seconds from start of original untrimmed audio"
+  },
+  "authority": "User-reviewed line text and timings from the attached review export. Do not replace them with old automatic estimates.",
+  "review_exported_at": "2026-09-27T08:37:02.698Z",
+  "summary": {
+    "confirmed_lines": 56,
+    "lines_with_automatic_word_timings": 7,
+    "untimed_source_lines": 16,
+    "overlapping_pairs": 4
+  },
+  "instructions": [
+    "Use original untrimmed audio, with seconds from its beginning.",
+    "Render all simultaneous active lines; overlaps are preserved from the user review.",
+    "Use line-level animation by default. Do not invent missing word timings or treat retained automatic word timings as human-verified.",
+    "Untimed source lines are excluded from the render timeline unless the user explicitly restores them."
+  ],
+  "lyrics": [
+    {
+      "source_line_id": "L001",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "落ちる",
+      "start": 24.95,
+      "end": 26.2,
+      "display_end": 26.2,
+      "line_timing_status": "user_confirmed",
+      "words": [
+        {
+          "text": "落",
+          "start": 24.95,
+          "end": 25.76
+        },
+        {
+          "text": "ち",
+          "start": 25.76,
+          "end": 25.94
+        },
+        {
+          "text": "る",
+          "start": 25.94,
+          "end": 26.2
+        }
+      ],
+      "word_timing_status": "automatic_unverified"
+    },
+    {
+      "source_line_id": "L002",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Fall.",
+      "start": 26.38,
+      "end": 27.47,
+      "display_end": 27.47,
+      "line_timing_status": "user_confirmed",
+      "words": [
+        {
+          "text": "Fall.",
+          "start": 26.38,
+          "end": 27.47
+        }
+      ],
+      "word_timing_status": "automatic_unverified"
+    },
+    {
+      "source_line_id": "L003",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "空の指の間から光が零れる",
+      "start": 28.18,
+      "end": 32.55,
+      "display_end": 32.55,
+      "line_timing_status": "user_confirmed",
+      "words": [
+        {
+          "text": "空",
+          "start": 28.18,
+          "end": 28.93
+        },
+        {
+          "text": "の",
+          "start": 28.93,
+          "end": 29.25
+        },
+        {
+          "text": "指",
+          "start": 29.25,
+          "end": 29.81
+        },
+        {
+          "text": "の",
+          "start": 29.81,
+          "end": 30.13
+        },
+        {
+          "text": "間",
+          "start": 30.13,
+          "end": 30.45
+        },
+        {
+          "text": "から",
+          "start": 30.45,
+          "end": 31.03
+        },
+        {
+          "text": "光",
+          "start": 31.03,
+          "end": 31.41
+        },
+        {
+          "text": "が",
+          "start": 31.41,
+          "end": 31.83
+        },
+        {
+          "text": "零",
+          "start": 31.83,
+          "end": 32.17
+        },
+        {
+          "text": "れる",
+          "start": 32.17,
+          "end": 32.55
+        }
+      ],
+      "word_timing_status": "automatic_unverified"
+    },
+    {
+      "source_line_id": "L004",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Light spills through the fingers of the sky.",
+      "start": 33.2,
+      "end": 37.6,
+      "display_end": 37.6,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L005",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "落ちる",
+      "start": 37.7,
+      "end": 38.3,
+      "display_end": 38.3,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L006",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Fall.",
+      "start": 38.48,
+      "end": 40.2,
+      "display_end": 40.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L007",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "翼ある瞼が地平線に輝く",
+      "start": 39.94,
+      "end": 44.35,
+      "display_end": 44.35,
+      "line_timing_status": "user_confirmed",
+      "words": [
+        {
+          "text": "翼",
+          "start": 39.94,
+          "end": 40.81
+        },
+        {
+          "text": "ある",
+          "start": 40.81,
+          "end": 41.33
+        },
+        {
+          "text": "瞼",
+          "start": 41.33,
+          "end": 42.11
+        },
+        {
+          "text": "が",
+          "start": 42.11,
+          "end": 42.43
+        },
+        {
+          "text": "地",
+          "start": 42.43,
+          "end": 42.63
+        },
+        {
+          "text": "平",
+          "start": 42.63,
+          "end": 42.87
+        },
+        {
+          "text": "線",
+          "start": 42.87,
+          "end": 43.25
+        },
+        {
+          "text": "に",
+          "start": 43.25,
+          "end": 43.57
+        },
+        {
+          "text": "輝",
+          "start": 43.57,
+          "end": 44.03
+        },
+        {
+          "text": "く",
+          "start": 44.03,
+          "end": 44.35
+        }
+      ],
+      "word_timing_status": "automatic_unverified"
+    },
+    {
+      "source_line_id": "L008",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Winged eyelids shine in the horizon.",
+      "start": 44.56,
+      "end": 49.5,
+      "display_end": 49.5,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L009",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "落ちる",
+      "start": 50,
+      "end": 50.5,
+      "display_end": 50.5,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L010",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Fall.",
+      "start": 50.5,
+      "end": 52.2,
+      "display_end": 52.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L011",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "形、移ろい、脱ぎ、沈む",
+      "start": 52.4,
+      "end": 56.48,
+      "display_end": 56.48,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L012",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Shapes, Shift, Shed, Sink.",
+      "start": 57.18,
+      "end": 59.48,
+      "display_end": 59.48,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L013",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "落ちる",
+      "start": 61.28,
+      "end": 62.46,
+      "display_end": 62.46,
+      "line_timing_status": "user_confirmed",
+      "words": [
+        {
+          "text": "落",
+          "start": 61.28,
+          "end": 62.2
+        },
+        {
+          "text": "ち",
+          "start": 62.2,
+          "end": 62.28
+        },
+        {
+          "text": "る",
+          "start": 62.28,
+          "end": 62.46
+        }
+      ],
+      "word_timing_status": "automatic_unverified"
+    },
+    {
+      "source_line_id": "L014",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Fall.",
+      "start": 62.8,
+      "end": 64.1,
+      "display_end": 64.1,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L015",
+      "section": "Verse 1",
+      "language": "ja",
+      "text": "鳥籠は遠く彼方へ",
+      "start": 63.95,
+      "end": 68.6,
+      "display_end": 68.6,
+      "line_timing_status": "user_confirmed",
+      "words": [
+        {
+          "text": "鳥",
+          "start": 63.95,
+          "end": 64.92
+        },
+        {
+          "text": "籠",
+          "start": 64.92,
+          "end": 65.24
+        },
+        {
+          "text": "は",
+          "start": 65.24,
+          "end": 65.68
+        },
+        {
+          "text": "遠",
+          "start": 65.68,
+          "end": 66.32
+        },
+        {
+          "text": "く",
+          "start": 66.32,
+          "end": 66.84
+        },
+        {
+          "text": "彼",
+          "start": 66.84,
+          "end": 67.7
+        },
+        {
+          "text": "方",
+          "start": 67.7,
+          "end": 68.04
+        },
+        {
+          "text": "へ",
+          "start": 68.04,
+          "end": 68.6
+        }
+      ],
+      "word_timing_status": "automatic_unverified"
+    },
+    {
+      "source_line_id": "L016",
+      "section": "Verse 1",
+      "language": "en",
+      "text": "Gone and distant is the aviary.",
+      "start": 68.9,
+      "end": 73.4,
+      "display_end": 73.4,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L017",
+      "section": "Chorus (1)",
+      "language": "ja",
+      "text": "じゆうーーー",
+      "start": 73.78,
+      "end": 79,
+      "display_end": 79,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L019",
+      "section": "Chorus (1)",
+      "language": "ja",
+      "text": "石と鋼と蒸気の鳥が加速する",
+      "start": 80.5,
+      "end": 84.5,
+      "display_end": 84.5,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L021",
+      "section": "Chorus (1)",
+      "language": "ja",
+      "text": "じゆうーーー",
+      "start": 86.2,
+      "end": 91.5,
+      "display_end": 91.5,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L023",
+      "section": "Chorus (1)",
+      "language": "ja",
+      "text": "雲と炎を越えて終わらない疾走",
+      "start": 92.2,
+      "end": 98.2,
+      "display_end": 98.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L025",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "落ちる",
+      "start": 110,
+      "end": 111.2,
+      "display_end": 111.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L026",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "Fall.",
+      "start": 111.4,
+      "end": 113,
+      "display_end": 113,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L027",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "星屑より速く進む",
+      "start": 113.1,
+      "end": 117.1,
+      "display_end": 117.1,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L028",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "I'm moving faster than the stardust.",
+      "start": 117.4,
+      "end": 122,
+      "display_end": 122,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L029",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "下へ",
+      "start": 122.2,
+      "end": 123,
+      "display_end": 123,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L030",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "Down.",
+      "start": 123.4,
+      "end": 124.8,
+      "display_end": 124.8,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L031",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "夜明けより軽くなる",
+      "start": 125,
+      "end": 129,
+      "display_end": 129,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L032",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "I'm turning lighter than the dawn.",
+      "start": 129.6,
+      "end": 134,
+      "display_end": 134,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L033",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "落ちる",
+      "start": 134.3,
+      "end": 135.2,
+      "display_end": 135.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L034",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "Fall.",
+      "start": 135.6,
+      "end": 136.6,
+      "display_end": 136.6,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L035",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "恐怖がこの軌道の樹で逆さに咲く",
+      "start": 136.8,
+      "end": 141.1,
+      "display_end": 141.1,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L036",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "Fear blooms backwards in this tree of trajectories.",
+      "start": 141.2,
+      "end": 146.1,
+      "display_end": 146.1,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L037",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "下へ",
+      "start": 146.3,
+      "end": 146.9,
+      "display_end": 146.9,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L038",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "Down.",
+      "start": 147.6,
+      "end": 148.4,
+      "display_end": 148.4,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L039",
+      "section": "Verse 2",
+      "language": "ja",
+      "text": "囁きの冠が私と共に廻り落ちる",
+      "start": 149,
+      "end": 153.2,
+      "display_end": 153.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L040",
+      "section": "Verse 2",
+      "language": "en",
+      "text": "The crown of whispers spins and spins down with me.",
+      "start": 153.6,
+      "end": 157.8,
+      "display_end": 157.8,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L041",
+      "section": "Chorus (2)",
+      "language": "ja",
+      "text": "じゆうーーー",
+      "start": 158.6,
+      "end": 163.4,
+      "display_end": 163.4,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L043",
+      "section": "Chorus (2)",
+      "language": "ja",
+      "text": "石と鋼と蒸気の鳥が加速する",
+      "start": 164.6,
+      "end": 168.6,
+      "display_end": 168.6,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L045",
+      "section": "Chorus (2)",
+      "language": "ja",
+      "text": "じゆうーーー",
+      "start": 170.4,
+      "end": 175.2,
+      "display_end": 175.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L047",
+      "section": "Chorus (2)",
+      "language": "ja",
+      "text": "雲と炎を越えて終わらない疾走",
+      "start": 176.4,
+      "end": 182,
+      "display_end": 182,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L049",
+      "section": "Verse 3",
+      "language": "ja",
+      "text": "下へ",
+      "start": 193.76,
+      "end": 194.91,
+      "display_end": 194.91,
+      "line_timing_status": "user_confirmed",
+      "words": [
+        {
+          "text": "下",
+          "start": 193.76,
+          "end": 194.29
+        },
+        {
+          "text": "へ",
+          "start": 194.29,
+          "end": 194.91
+        }
+      ],
+      "word_timing_status": "automatic_unverified"
+    },
+    {
+      "source_line_id": "L050",
+      "section": "Verse 3",
+      "language": "en",
+      "text": "Down.",
+      "start": 195,
+      "end": 195.8,
+      "display_end": 195.8,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L051",
+      "section": "Verse 3",
+      "language": "ja",
+      "text": "香り、影、声、木霊",
+      "start": 196.4,
+      "end": 199.8,
+      "display_end": 199.8,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L053",
+      "section": "Verse 3",
+      "language": "ja",
+      "text": "下へ",
+      "start": 200.6,
+      "end": 201,
+      "display_end": 201,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L054",
+      "section": "Verse 3",
+      "language": "en",
+      "text": "Down.",
+      "start": 201.2,
+      "end": 201.8,
+      "display_end": 201.8,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L055",
+      "section": "Verse 3",
+      "language": "ja",
+      "text": "薄れ、薄れ、薄れ、薄れ、薄れ、薄れ、広がるーーー",
+      "start": 202.2,
+      "end": 207.2,
+      "display_end": 207.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L057",
+      "section": "Verse 3",
+      "language": "ja",
+      "text": "下へ",
+      "start": 206.3,
+      "end": 207.1,
+      "display_end": 207.1,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L058",
+      "section": "Verse 3",
+      "language": "en",
+      "text": "Down.",
+      "start": 207.4,
+      "end": 207.9,
+      "display_end": 207.9,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L059",
+      "section": "Verse 3",
+      "language": "ja",
+      "text": "羽が伸びる、縛りが解ける、空が撓む、鷲が舞う",
+      "start": 208.2,
+      "end": 213,
+      "display_end": 213,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L062",
+      "section": "Verse 3",
+      "language": "en",
+      "text": "Down.",
+      "start": 213.4,
+      "end": 213.9,
+      "display_end": 213.9,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L063",
+      "section": "Verse 3",
+      "language": "ja",
+      "text": "落ちる、落ちる、落ちる、落ちる",
+      "start": 214.2,
+      "end": 218.3,
+      "display_end": 218.3,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L065",
+      "section": "Chorus (3)",
+      "language": "ja",
+      "text": "じゆうーーー",
+      "start": 218.3,
+      "end": 223.5,
+      "display_end": 223.5,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L066",
+      "section": "Chorus (3)",
+      "language": "en",
+      "text": "Freeeedom!",
+      "start": 219.4,
+      "end": 221,
+      "display_end": 221,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L067",
+      "section": "Chorus (3)",
+      "language": "ja",
+      "text": "石と鋼と蒸気の鳥が加速する",
+      "start": 224.4,
+      "end": 228.58,
+      "display_end": 228.58,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L069",
+      "section": "Chorus (3)",
+      "language": "ja",
+      "text": "じゆうーーー",
+      "start": 230.3,
+      "end": 235.8,
+      "display_end": 235.8,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    },
+    {
+      "source_line_id": "L071",
+      "section": "Chorus (3)",
+      "language": "ja",
+      "text": "雲と炎を越えて終わらない疾走",
+      "start": 236.1,
+      "end": 242.2,
+      "display_end": 242.2,
+      "line_timing_status": "user_confirmed",
+      "words": [],
+      "word_timing_status": "not_available"
+    }
+  ],
+  "untimed_source_lines": [
+    {
+      "source_line_id": "L018",
+      "language": "en",
+      "text": "Freeeedom!"
+    },
+    {
+      "source_line_id": "L020",
+      "language": "en",
+      "text": "Birds of stone and steel and steam rapidly gaining speed."
+    },
+    {
+      "source_line_id": "L022",
+      "language": "en",
+      "text": "Freeeedom!"
+    },
+    {
+      "source_line_id": "L024",
+      "language": "en",
+      "text": "Journey across cloud and flame in a run that never ends."
+    },
+    {
+      "source_line_id": "L042",
+      "language": "en",
+      "text": "Freeeedom!"
+    },
+    {
+      "source_line_id": "L044",
+      "language": "en",
+      "text": "Birds of stone and steel and steam rapidly gaining speed."
+    },
+    {
+      "source_line_id": "L046",
+      "language": "en",
+      "text": "Freeeedom!"
+    },
+    {
+      "source_line_id": "L048",
+      "language": "en",
+      "text": "Journey across cloud and flame in a run that never ends."
+    },
+    {
+      "source_line_id": "L052",
+      "language": "en",
+      "text": "Scent, shadow, sound, echo."
+    },
+    {
+      "source_line_id": "L056",
+      "language": "en",
+      "text": "Waning, waning, waning, waning, waning, waning, Groooowing."
+    },
+    {
+      "source_line_id": "L060",
+      "language": "en",
+      "text": "Feathers stretch, bindings part, skyline bends, eagle soars."
+    },
+    {
+      "source_line_id": "L061",
+      "language": "ja",
+      "text": "下へ"
+    },
+    {
+      "source_line_id": "L064",
+      "language": "en",
+      "text": "Fall down, fall down, fall down, fall down..."
+    },
+    {
+      "source_line_id": "L068",
+      "language": "en",
+      "text": "Birds of stone and steel and steam rapidly gaining speed."
+    },
+    {
+      "source_line_id": "L070",
+      "language": "en",
+      "text": "Freeeedom!"
+    },
+    {
+      "source_line_id": "L072",
+      "language": "en",
+      "text": "Journey across cloud and flame in a run that never ends."
+    }
+  ],
+  "overlaps": [
+    {
+      "lines": [
+        "L006",
+        "L007"
+      ],
+      "start": 39.94,
+      "end": 40.2
+    },
+    {
+      "lines": [
+        "L014",
+        "L015"
+      ],
+      "start": 63.95,
+      "end": 64.1
+    },
+    {
+      "lines": [
+        "L055",
+        "L057"
+      ],
+      "start": 206.3,
+      "end": 207.1
+    },
+    {
+      "lines": [
+        "L065",
+        "L066"
+      ],
+      "start": 219.4,
+      "end": 221
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "name": "dissend-video",
+  "private": true,
+  "type": "module",
+  "description": "Code-rendered music video for Dissend",
+  "scripts": {
+    "render": "node tools/render.mjs",
+    "still": "node tools/still.mjs",
+    "serve": "npx http-server -c-1 -p 8080 ."
+  },
+  "dependencies": {
+    "@napi-rs/canvas": "^1.0.9"
+  }
+}
