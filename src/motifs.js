@@ -89,58 +89,112 @@ export function mistBand(ctx, x, y, w, h, color, o = {}) {
   ctx.restore();
 }
 
-// Flat stylised cumulus with a scalloped top and flat base.
+// Ukiyo-e cloud (瑞雲): stacked scallops, each echoed by inner contour arcs,
+// spiral curls at the ends, a shaded underside, a trailing ribbon tail.
 export function cloud(ctx, x, y, s, fill, seed, o = {}) {
-  const n = 5 + Math.floor(h2(seed, 1) * 4);
+  const n = 4 + Math.floor(h2(seed, 1) * 3);
+  const lw = o.lw || 5;
+  const line = o.outline;
+  const shade = o.shade || null;
+  const t = o.t || 0;
+  // two rows of bumps: a big crown and a lower shoulder row
   const bumps = [];
-  let span = 0;
+  let cx = -s * 0.9 * (n / 5);
   for (let i = 0; i < n; i++) {
-    const r = s * rnd(seed, i + 10, 0.35, 0.8) * (1 - Math.abs(i / (n - 1) - 0.5) * 0.9);
-    bumps.push(r);
-    span += r * 1.35;
+    const mid = 1 - Math.abs(i / (n - 1) - 0.5) * 1.1;
+    const r = s * rnd(seed, i + 10, 0.32, 0.46) * (0.55 + mid * 0.6);
+    cx += r * 0.85;
+    bumps.push([cx, -r * 0.35 - mid * s * 0.18, r]);
+    cx += r * 0.85;
   }
-  const draw = (grow, color) => {
-    ctx.fillStyle = color;
+  const span = cx;
+  const off = -span / 2;
+  const dir = h2(seed, 3) > 0.5 ? 1 : -1;
+  const tailLen = s * rnd(seed, 4, 1.2, 2.4);
+  const bodyPath = (g) => {
     ctx.beginPath();
-    let cx = x - span / 2;
-    for (let i = 0; i < n; i++) {
-      const r = bumps[i];
-      cx += r * 0.675;
-      ctx.moveTo(cx + r + grow, y);
-      ctx.arc(cx, y - r * 0.2, r + grow, 0, TAU);
-      cx += r * 0.675;
-    }
-    ctx.rect(x - span / 2 - grow, y - s * 0.12 - grow, span + grow * 2, s * 0.32 + grow * 2);
-    ctx.fill();
+    for (const [bx, by, r] of bumps) { ctx.moveTo(x + off + bx + r + g, y + by); ctx.arc(x + off + bx, y + by, r + g, 0, TAU); }
+    // flat-bottomed base band with rounded ends
+    const bh = s * 0.34 + g * 2;
+    ctx.roundRect(x + off - s * 0.2 - g, y - s * 0.1 - g, span + s * 0.4 + g * 2, bh, bh / 2);
+    // trailing ribbon tail (suyari-gasumi)
+    const tx0 = dir > 0 ? x - off + s * 0.1 : x + off - s * 0.1 - tailLen;
+    ctx.roundRect(tx0 - g, y + s * 0.02 - g, tailLen + g * 2, s * 0.16 + g * 2, s * 0.08 + g);
   };
   ctx.save();
-  if (o.outline) draw(o.lw || 5, o.outline);
-  draw(0, fill);
-  if (o.shade) {
-    // a lower shadow band clipped to the cloud
-    ctx.globalCompositeOperation = 'source-atop';
-    ctx.fillStyle = o.shade;
-    ctx.fillRect(x - span, y + s * 0.02, span * 2, s);
+  if (line) { ctx.fillStyle = line; bodyPath(lw); ctx.fill(); }
+  ctx.fillStyle = fill;
+  bodyPath(0);
+  ctx.fill();
+  // shaded underside, clipped to the body
+  if (shade) {
+    ctx.save();
+    bodyPath(0);
+    ctx.clip();
+    ctx.fillStyle = shade;
+    ctx.fillRect(x - span - tailLen - s, y + s * 0.02, span * 2 + tailLen * 2 + s * 2, s);
+    ctx.restore();
+  }
+  if (line) {
+    ctx.strokeStyle = line;
+    ctx.lineCap = 'round';
+    // inner echo arcs inside every scallop
+    for (const [bx, by, r] of bumps) {
+      for (const k of [0.68, 0.38]) {
+        ctx.lineWidth = lw * (k > 0.5 ? 0.55 : 0.4);
+        ctx.beginPath();
+        ctx.arc(x + off + bx, y + by + r * (1 - k) * 0.35, r * k, Math.PI * 1.08, Math.PI * 1.92);
+        ctx.stroke();
+      }
+    }
+    // spiral curls at both ends of the base
+    for (const side of [-1, 1]) {
+      const ex = side < 0 ? x + off - s * 0.2 + s * 0.17 : x - off + s * 0.2 - s * 0.17;
+      const ey = y + s * 0.07;
+      ctx.lineWidth = lw * 0.6;
+      ctx.beginPath();
+      for (let k = 0; k <= 30; k++) {
+        const u = k / 30;
+        const a = side * (u * TAU * 1.35) + (side < 0 ? Math.PI : 0) + t * 0.5;
+        const r = s * 0.15 * (1 - u * 0.85);
+        const px = ex + Math.cos(a) * r, py = ey + Math.sin(a) * r;
+        k ? ctx.lineTo(px, py) : ctx.moveTo(px, py);
+      }
+      ctx.stroke();
+    }
+    // a speed-line inside the tail
+    ctx.lineWidth = lw * 0.4;
+    const tx0 = dir > 0 ? x - off + s * 0.2 : x + off - s * 0.2 - tailLen + s * 0.2;
+    ctx.beginPath();
+    ctx.moveTo(tx0, y + s * 0.1);
+    ctx.lineTo(tx0 + tailLen - s * 0.3, y + s * 0.1);
+    ctx.stroke();
   }
   ctx.restore();
   return span;
 }
 
-// Flat flame tongues. u = 0..1 phase, s = height.
+// Flame in the kaen style: several tongues whose tips curl over, layered
+// outer / inner. u = time, s = height.
 export function flame(ctx, x, y, s, t, color, seed, o = {}) {
-  const tongues = o.tongues || 3;
+  const tongues = (o.tongues || 3) + 2;
   ctx.save();
   ctx.fillStyle = color;
   for (let k = 0; k < tongues; k++) {
-    const off = (k - (tongues - 1) / 2) * s * 0.28;
-    const hk = s * (1 - Math.abs(k - (tongues - 1) / 2) * 0.28) * (0.85 + 0.15 * noise1(t * 3 + k * 5, seed));
-    const wk = s * 0.22;
-    const sway = noise1(t * 2.4 + k * 3.1, seed + 7) * s * 0.18;
+    const c = (k - (tongues - 1) / 2) / ((tongues - 1) / 2); // -1..1
+    const off = c * s * 0.36;
+    const hk = s * (1 - Math.abs(c) * 0.42) * (0.82 + 0.18 * noise1(t * 3 + k * 5, seed));
+    const wk = s * (0.2 - Math.abs(c) * 0.05);
+    const curl = (c === 0 ? (h2(seed, k) - 0.5) : Math.sign(c)) * s * 0.22 * (0.7 + 0.3 * Math.sin(t * 4 + k));
+    const sway = noise1(t * 2.4 + k * 3.1, seed + 7) * s * 0.08;
     const bx = x + off, by = y;
+    const tx = bx + sway + curl, ty = by - hk;
     ctx.beginPath();
     ctx.moveTo(bx - wk, by);
-    ctx.bezierCurveTo(bx - wk * 1.1, by - hk * 0.45, bx - wk * 0.2 + sway * 0.4, by - hk * 0.65, bx + sway, by - hk);
-    ctx.bezierCurveTo(bx + wk * 0.5 + sway * 0.4, by - hk * 0.6, bx + wk * 1.15, by - hk * 0.4, bx + wk, by);
+    ctx.bezierCurveTo(bx - wk * 1.2, by - hk * 0.45, bx - wk * 0.3 + sway, by - hk * 0.8, tx, ty);
+    // the curl: hook back down before the right edge
+    ctx.quadraticCurveTo(tx + curl * 0.3, ty + hk * 0.18, tx - curl * 0.35, ty + hk * 0.22);
+    ctx.bezierCurveTo(bx + wk * 0.6 + sway, by - hk * 0.5, bx + wk * 1.2, by - hk * 0.3, bx + wk, by);
     ctx.quadraticCurveTo(bx, by + wk * 0.5, bx - wk, by);
     ctx.fill();
   }

@@ -5,6 +5,7 @@ import * as M from './motifs.js';
 import { textH, textV, widthOf } from './type.js';
 import { fill, vgrad, mistField, halftoneBands, speed, cloudField, flameField } from './layers.js';
 import { BLOCKS2 } from './scenes2.js';
+import * as PH from './phoenix.js';
 import { BLOCKS3 } from './scenes3.js';
 
 export const SEC = {
@@ -84,7 +85,7 @@ function intro(ctx, S) {
     const title = 'DISSEND';
     const size = 132;
     const tr = 0.42;
-    textH(ctx, 'wideThin', title, W / 2, ledgeY + 150, size, { fill: P.ink, tracking: tr }, (i, n, g, gx, gy) => {
+    textH(ctx, 'wideThin', title, W / 2, ledgeY + 300, size, { fill: P.ink, tracking: tr }, (i, n, g, gx, gy) => {
       const ap = ew(t, 5.6 + i * 0.28, 6.6 + i * 0.28, 'outCubic');
       if (ap <= 0) return false;
       const drop = Math.max(0, t - (leapT + 0.15 + i * 0.11));
@@ -102,7 +103,7 @@ function intro(ctx, S) {
       const x = W / 2 - L / 2 + (L / title.length) * (i + 0.45);
       ctx.beginPath();
       ctx.moveTo(x, ledgeY);
-      ctx.lineTo(x, ledgeY + 80);
+      ctx.lineTo(x, ledgeY + 232);
       ctx.stroke();
     }
   }
@@ -111,33 +112,36 @@ function intro(ctx, S) {
   for (const [tb, seed, style] of [[16.95, 3, 'rule'], [20.05, 5, 'rule'], [23.0, 8, 'bars']]) {
     M.barrier(ctx, W, t, tb, { color: P.ink, y: H * 0.5, thick: style === 'bars' ? 8 : 6, seed, approach: 0.55, pieces: 11, tick: style === 'bars' ? 96 : 30, H, style });
   }
-  // the figure
+  // the phoenix: perched on the ledge, flares, launches, then owns the fall
   if (t > 5.5 && t < 25) {
-    const s = 58;
-    let x = W / 2, y, rot = 0, pose, wings = 0;
-    const standY = ledgeY - s * 1.6;
-    if (t < 12.6) { pose = M.POSES.stand; y = standY; }
-    else if (t < leapT) { pose = M.mixPose(M.POSES.stand, M.POSES.crouch, ew(t, 12.6, leapT, 'inOutCubic')); y = standY + ew(t, 12.6, leapT) * s * 0.35; }
-    else {
-      const u = t - leapT;
-      pose = M.mixPose(M.POSES.leap, M.POSES.spread, ew(t, leapT + 0.5, leapT + 2.2, 'inOutCubic'));
-      // jump up a little, then settle to screen centre as the camera follows
-      const jump = -Math.sin(clamp(u / 0.9) * Math.PI) * 120;
-      y = lerp(standY + jump, H * 0.47, ew(t, leapT + 0.3, leapT + 2.6, 'inOutCubic'));
-      rot = Math.sin(u * 0.9) * 0.22 + ew(t, leapT, leapT + 1.5) * 0.15;
-      x += Math.sin(u * 0.6) * 60;
-      if (t > 23.9) {
-        // dive out of frame before the first word
-        const d = ew(t, 23.9, 24.75, 'inCubic');
-        pose = M.mixPose(pose, M.POSES.dive, ew(t, 23.9, 24.3));
-        rot = lerp(rot, Math.PI, ew(t, 23.9, 24.3, 'inOutCubic'));
-        y += d * H * 0.75;
-      }
-    }
+    const s = 88;
+    const perchY = ledgeY - s * 0.95;
+    const C = PH.phoenixColors(P.paper);
     const a = ew(t, 5.5, 7);
-    ctx.globalAlpha = a;
-    M.diver(ctx, x, y, s, pose, rot, P.red, { wings });
-    ctx.globalAlpha = 1;
+    if (t < leapT) {
+      const flare = ew(t, 11.8, 13.2, 'outCubic');
+      PH.phoenix(ctx, W / 2, perchY - flare * 24, s, Math.PI, {
+        open: 0.08 + flare * 0.92 + Math.sin(t * 1.6) * 0.02, beat: Math.sin(t * 10) * 0.5 * flare, t, colors: C, alpha: a,
+      });
+    } else {
+      const u = t - leapT;
+      const amp = ew(t, leapT + 0.8, leapT + 3.2, 'inOutCubic');
+      const f = PH.flightPose(S, t, { amp, fall: 700 });
+      const k = ew(t, leapT, leapT + 1.2, 'inOutCubic');
+      // launch: shoot up off the ledge, flip over into the dive
+      const launchY = perchY - Math.sin(clamp(u / 1.0) * Math.PI) * 300;
+      let x = lerp(W / 2, f.x, k), y = lerp(launchY, f.y, k);
+      let rot = lerp(Math.PI, f.rot, ew(t, leapT + 0.3, leapT + 0.85, 'inOutCubic'));
+      let open = lerp(1, f.open, ew(t, leapT + 0.5, leapT + 1.3)), beat = lerp(Math.sin(u * 16), f.beat, k);
+      if (t > 23.9) {
+        const d = ew(t, 23.9, 24.75, 'inCubic');
+        y += d * H * 0.85;
+        open = lerp(open, 0.08, ew(t, 23.9, 24.15));
+        rot = lerp(rot, 0, ew(t, 23.9, 24.15));
+      }
+      if (t > leapT + 0.5) PH.fireTrail(ctx, S, t, { amp, alpha: ew(t, leapT + 0.5, leapT + 1.5) * (1 - ew(t, 24.1, 24.7)), colors: C.trail });
+      PH.phoenix(ctx, x, y, s, rot, { open, beat, flow: f.flow, t, colors: C });
+    }
   }
 
   // the opening lid: black with an almond aperture
@@ -188,70 +192,135 @@ function v1Sky(ctx, S) {
   speed(ctx, S, P.ink, Math.floor(20 + 90 * S.E), { alpha: 0.6, red: P.red, redEvery: 11 });
 }
 
-function fingers(ctx, S) {
-  const { t, W, H } = S;
-  const inU = ew(t, 27.7, 28.9, 'outExpo');
-  const outU = ew(t, 37.3, 38.3, 'inExpo');
-  const drop = inU - outU;
-  if (drop <= 0.001) return;
-  const xs = [0.07, 0.2, 0.33, 0.46, 0.59];
-  const gapsX = [];
-  // rays first (behind the fingers)
-  for (let i = 0; i < xs.length - 1; i++) gapsX.push((xs[i] + xs[i + 1]) / 2 * W);
-  gapsX.push(0.68 * W);
-  const spill = ew(t, 31.0, 32.6, 'outCubic');
+// A backlit hand in near first person. Wrist at (0,0), fingers toward -y.
+function hand(ctx, x, y, sc, rot, mirror, t, open, C) {
   ctx.save();
-  gapsX.forEach((gx, i) => {
-    const a = 0.32 + 0.3 * spill + 0.08 * Math.sin(t * 2 + i);
-    ctx.globalAlpha = a * drop;
-    ctx.fillStyle = P.paperLight;
-    const top = H * 0.08, spread = 70 + 240 * (0.5 + spill * 0.5) + i * 12;
+  ctx.translate(x, y);
+  ctx.rotate(rot);
+  ctx.scale(mirror * sc, sc);
+  // finger roots across the knuckles, lengths, splay, curl
+  const F = [
+    { bx: -0.34, by: -1.02, len: 0.78, w: 0.2, a: -0.16 - open * 0.1 },
+    { bx: -0.12, by: -1.12, len: 0.98, w: 0.21, a: -0.04 - open * 0.03 },
+    { bx: 0.11, by: -1.1, len: 0.92, w: 0.205, a: 0.08 + open * 0.05 },
+    { bx: 0.31, by: -1.0, len: 0.72, w: 0.18, a: 0.2 + open * 0.12 },
+  ];
+  const fingerPath = (f, k) => {
+    const wig = Math.sin(t * 0.9 + k * 1.7) * 0.015;
+    const a = f.a + wig;
+    const dx = Math.sin(a), dy = -Math.cos(a);
+    const nx = -dy, ny = dx;
+    const tx = f.bx + dx * f.len, ty = f.by + dy * f.len;
+    const w0 = f.w / 2, w1 = f.w * 0.4;
     ctx.beginPath();
-    ctx.moveTo(gx - 20, top);
-    ctx.lineTo(gx + 20, top);
-    ctx.lineTo(gx + spread + 80 * Math.sin(t * 0.7 + i), H + 40);
-    ctx.lineTo(gx - spread + 80 * Math.sin(t * 0.7 + i), H + 40);
+    ctx.moveTo(f.bx + nx * w0, f.by + ny * w0 + 0.12);
+    ctx.quadraticCurveTo(f.bx + dx * f.len * 0.5 + nx * w0 * 1.05, f.by + dy * f.len * 0.5 + ny * w0 * 1.05, tx + nx * w1, ty + ny * w1);
+    ctx.arc(tx, ty, w1, Math.atan2(ny, nx), Math.atan2(ny, nx) + Math.PI, true);
+    ctx.quadraticCurveTo(f.bx + dx * f.len * 0.5 - nx * w0 * 1.05, f.by + dy * f.len * 0.5 - ny * w0 * 1.05, f.bx - nx * w0, f.by - ny * w0 + 0.12);
     ctx.closePath();
-    ctx.fill();
-  });
-  ctx.restore();
-  // falling motes of light
-  ctx.save();
-  ctx.fillStyle = P.paperLight;
-  for (let k = 0; k < 90; k++) {
-    const gx = gapsX[k % gapsX.length];
-    const life = fract(t * rnd(4, k, 0.25, 0.6) + h2(4, k + 9));
-    const y = H * 0.1 + life * H;
-    const x = gx + rnd(4, k + 3, -1, 1) * 60 * (0.3 + life * 3);
-    ctx.globalAlpha = drop * (1 - life) * (0.4 + spill * 0.6);
-    ctx.fillRect(x, y, 3, 3 + S.speed * 0.01);
-  }
-  ctx.restore();
-  // fingers
-  ctx.save();
-  xs.forEach((fx, i) => {
-    const w = [96, 118, 124, 112, 88][i];
-    const len = H * [0.44, 0.58, 0.64, 0.56, 0.38][i] * (1 + 0.04 * Math.sin(t * 1.4 + i * 1.7));
-    const x = fx * W + Math.sin(t * 0.8 + i) * 8;
-    const y1 = -40 + (len + 40) * drop;
-    ctx.fillStyle = P.ink;
-    ctx.beginPath();
-    ctx.roundRect(x - w / 2, -60, w, y1 + 60, [0, 0, w / 2, w / 2]);
-    ctx.fill();
-    // knuckle creases
-    ctx.fillStyle = P.sand;
-    for (const k of [0.45, 0.72]) {
-      const yy = y1 * k;
-      ctx.fillRect(x - w * 0.28, yy, w * 0.56, 3);
+    return { dx, dy, nx, ny, tx, ty, w1 };
+  };
+  // palm + wrist + thumb
+  ctx.fillStyle = C.skin;
+  ctx.beginPath();
+  ctx.moveTo(-0.42, 0.9);
+  ctx.bezierCurveTo(-0.5, 0.2, -0.52, -0.6, -0.44, -1.0);
+  ctx.quadraticCurveTo(0, -1.2, 0.42, -0.98);
+  ctx.bezierCurveTo(0.5, -0.5, 0.46, 0.2, 0.36, 0.9);
+  ctx.closePath();
+  ctx.fill();
+  F.forEach((f, k) => { fingerPath(f, k); ctx.fill(); });
+  // rim light on the edges facing the sun, then creases and nails
+  ctx.lineCap = 'round';
+  F.forEach((f, k) => {
+    const g = fingerPath(f, k);
+    ctx.save();
+    ctx.clip();
+    ctx.strokeStyle = C.rim;
+    ctx.lineWidth = 0.035;
+    ctx.stroke();
+    ctx.restore();
+    ctx.strokeStyle = C.crease;
+    ctx.lineWidth = 0.012;
+    for (const u of [0.38, 0.66]) {
+      const cx = f.bx + g.dx * f.len * u, cy = f.by + g.dy * f.len * u;
+      ctx.beginPath();
+      ctx.moveTo(cx - g.nx * f.w * 0.28, cy - g.ny * f.w * 0.28);
+      ctx.quadraticCurveTo(cx - g.dy * 0.0 + g.dx * 0.03, cy + g.dy * 0.03, cx + g.nx * f.w * 0.28, cy + g.ny * f.w * 0.28);
+      ctx.stroke();
     }
-    // nail
-    ctx.strokeStyle = P.sand;
-    ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.roundRect(x - w * 0.22, y1 - w * 0.78, w * 0.44, w * 0.5, [w * 0.06, w * 0.06, w * 0.2, w * 0.2]);
+    ctx.ellipse(g.tx - g.dx * g.w1 * 0.9, g.ty - g.dy * g.w1 * 0.9, g.w1 * 0.62, g.w1 * 0.95, Math.atan2(g.dy, g.dx) + Math.PI / 2, 0, TAU);
     ctx.stroke();
   });
+  // knuckle bumps
+  ctx.strokeStyle = C.crease;
+  ctx.lineWidth = 0.014;
+  F.forEach((f) => { ctx.beginPath(); ctx.arc(f.bx, f.by + 0.16, f.w * 0.32, Math.PI * 1.15, Math.PI * 1.85); ctx.stroke(); });
   ctx.restore();
+}
+
+// Crossed hands held against the sky; they part and the sun breaks through.
+function fingers(ctx, S) {
+  const { t, W, H } = S;
+  const inU = ew(t, 27.6, 29.0, 'outCubic');
+  const outU = ew(t, 37.2, 38.3, 'inCubic');
+  const vis = inU * (1 - outU);
+  if (vis <= 0.001) return;
+  const part = ew(t, 29.2, 37.0, 'inOutCubic');
+  const burst = ew(t, 30.9, 32.7, 'outCubic');
+  const sx = W * 0.5, sy = H * 0.42;
+  // sky behind the hands: dusk-dark until the light arrives
+  vgrad(ctx, S, mix(P.char, P.sand, burst * 0.7), mix(P.char, P.paperDark, burst));
+  // the sun and its rays
+  ctx.save();
+  ctx.globalAlpha = vis;
+  for (let r = 5; r >= 0; r--) {
+    ctx.fillStyle = mix(P.paperLight, P.redHot, r / 7);
+    ctx.globalAlpha = vis * (r ? 0.18 + 0.12 * burst : 1);
+    ctx.beginPath();
+    ctx.arc(sx, sy, (60 + r * 70) * (0.8 + 0.5 * burst), 0, TAU);
+    ctx.fill();
+  }
+  ctx.fillStyle = P.paperLight;
+  for (let i = 0; i < 36; i++) {
+    const a = (i / 36) * TAU + t * 0.04 + noise1(i * 3.1 + t * 0.3, 2) * 0.05;
+    const w = rnd(12, i, 0.008, 0.03) * (0.6 + burst);
+    ctx.globalAlpha = vis * (0.25 + 0.55 * burst) * (0.6 + 0.4 * Math.sin(t * 2 + i * 1.3));
+    ctx.beginPath();
+    ctx.moveTo(sx, sy);
+    ctx.lineTo(sx + Math.cos(a - w) * 2600, sy + Math.sin(a - w) * 2600);
+    ctx.lineTo(sx + Math.cos(a + w) * 2600, sy + Math.sin(a + w) * 2600);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+  // two hands, fingers crossed over the sun, drifting apart
+  const C = { skin: P.ink, rim: mix(P.redHot, P.paperLight, burst * 0.6), crease: P.char };
+  const sc = 560;
+  const drift = part * 330, lift = (1 - inU) * 700 + outU * 900;
+  const breathe = Math.sin(t * 0.8) * 8;
+  hand(ctx, W * 0.33 - drift, H * 1.3 + lift + breathe, sc, 0.62 + part * 0.16, 1, t, part, C);
+  hand(ctx, W * 0.67 + drift, H * 1.32 + lift - breathe, sc, -0.62 - part * 0.16, -1, t + 2, part, C);
+  // light spilling over the edges of the fingers once the sun is out
+  if (burst > 0) {
+    ctx.save();
+    ctx.globalCompositeOperation = 'screen';
+    ctx.globalAlpha = 0.1 * burst * vis;
+    ctx.fillStyle = P.redHot;
+    ctx.beginPath();
+    ctx.arc(sx, sy, 380 + 60 * S.low, 0, TAU);
+    ctx.fill();
+    ctx.restore();
+  }
+  // motes drifting down through the gap
+  ctx.fillStyle = P.paperLight;
+  for (let k = 0; k < 70; k++) {
+    const life = fract(t * rnd(4, k, 0.15, 0.4) + h2(4, k + 9));
+    ctx.globalAlpha = vis * (1 - life) * burst;
+    ctx.fillRect(sx + rnd(4, k + 3, -1, 1) * (80 + life * 700), sy + life * H * 0.7, 3, 3 + S.speed * 0.008);
+  }
+  ctx.globalAlpha = 1;
 }
 
 export const horizonY = (t, H) => lerp(H * 0.72, H * 0.56, ew(t, 38.1, 49.5, 'inOutCubic'));

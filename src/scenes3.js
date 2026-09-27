@@ -2,6 +2,7 @@
 import { TAU, clamp, lerp, seg, env, ew, ease, mod, h2, rnd, noise1, fract, mix, rgba, strSeed } from './util.js';
 import { P } from './palette.js';
 import * as M from './motifs.js';
+import * as PH from './phoenix.js';
 import { fill, vgrad, mistField, halftoneBands, speed, cloudField, flameField } from './layers.js';
 import { frameTunnel, tree, flock } from './scenes2.js';
 import { glyph } from './type.js';
@@ -18,19 +19,19 @@ function breakdown(ctx, S) {
     frameTunnel(ctx, S, { color: P.ink, alpha: build, lwK: 0.8 });
     M.focusLines(ctx, W, H, W / 2, H / 2, { count: 160, inner: lerp(700, 260, build), innerVar: 250, color: P.ink, frame: Math.floor(t * 12), alpha: build * 0.9 });
   }
-  // the figure floats, arms like wings, then dives into verse 3
+  // the phoenix hangs in the updraft, wings wide, then folds and dives into verse 3
   const u = t - 182.2;
-  let pose = M.mixPose(M.POSES.spread, M.POSES.soar, ew(t, 182.4, 185));
-  let y = H * 0.58 + Math.sin(u * 0.8) * 30, rot = Math.sin(u * 0.5) * 0.18;
-  if (t > 192.4) {
-    pose = M.mixPose(pose, M.POSES.dive, ew(t, 192.4, 193.2));
-    rot = lerp(rot, Math.PI, ew(t, 192.4, 193.3, 'inOutCubic'));
-    y += ew(t, 193.1, 193.76, 'inCubic') * H * 0.8;
+  const C = PH.phoenixColors(P.paper);
+  let x = W / 2 + Math.sin(u * 0.45) * 160, y = H * 0.5 + Math.sin(u * 0.9) * 26;
+  let rot = Math.sin(u * 0.45 + 1.2) * 0.35, open = 1, beat = Math.sin(u * 1.4) * 0.6;
+  if (t > 192.3) {
+    const d = ew(t, 192.3, 192.9, 'outCubic');
+    y -= d * 90;                       // a last lift...
+    open = lerp(1, 0.08, ew(t, 192.9, 193.3, 'inCubic'));
+    rot = lerp(rot, 0, ew(t, 192.6, 193.2, 'inOutCubic'));
+    y += ew(t, 193.1, 193.76, 'inCubic') * H * 0.95; // ...then everything down
   }
-  const a = ew(t, 182.4, 183.6);
-  ctx.globalAlpha = a;
-  M.diver(ctx, W / 2 + Math.sin(u * 0.4) * 80, y, 64, pose, rot, P.red, { wings: 0.9 * (1 - ew(t, 192.4, 193)) });
-  ctx.globalAlpha = 1;
+  PH.phoenix(ctx, x, y, 78, rot, { open, beat, flow: Math.cos(u * 0.45) * 0.4, t, colors: C, alpha: ew(t, 182.4, 183.6) });
 }
 
 // ------------------------------------------------------------------ verse 3
@@ -153,8 +154,7 @@ function outro(ctx, S) {
     halftoneBands(ctx, S, { color: P.redDeep, cell: 20, alpha: 1, gap: 800 });
     speed(ctx, S, P.ink, Math.floor(100 + 100 * S.E), { alpha: 0.55, red: P.paperLight, redEvery: 5, maxW: 4 });
     frameTunnel(ctx, S, { color: P.ink, lwK: 1.2 });
-    const u = t - 242.3;
-    M.diver(ctx, W / 2 + Math.sin(u) * 50, H * 0.52, 50, M.mixPose(M.POSES.dive, M.POSES.spread, 0.5 + 0.5 * Math.sin(u * 1.7)), Math.PI + Math.sin(u * 1.2) * 0.4, P.paperLight);
+    PH.flyingPhoenix(ctx, S, { bg: P.red, s: 74, laneW: W * 0.24, seed: 21 });
     return;
   }
   // 250–258: everything we have passed rises past us once more
@@ -218,8 +218,7 @@ function outro(ctx, S) {
     speed(ctx, S, fg, 160, { alpha: 0.5, maxW: 4 });
     M.focusLines(ctx, W, H, W / 2, H / 2, { count: 130, inner: 380, innerVar: 300, color: fg, frame: Math.floor(t * 12), alpha: 0.5 + 0.4 * S.bp });
     glyphRain(ctx, S, { count: 110, colors: bg === P.red ? [P.ink, P.paperLight] : [fg, P.red] });
-    const u = t - 258;
-    M.diver(ctx, W / 2, H * 0.5 + Math.sin(u * 2) * 20, 72, M.POSES.wing, Math.sin(u * 0.9) * 0.2, bg === P.red ? P.paperLight : P.red, { wings: 1.2 });
+    PH.flyingPhoenix(ctx, S, { bg, s: 96, laneW: W * 0.3, seed: 31, amp: 1.2 });
     return;
   }
   // 268.7–end: release. Paper rises from below like a last cloud layer;
@@ -246,7 +245,8 @@ function outro(ctx, S) {
   const x = W / 2, y = lerp(H * 0.5, H * 0.46, away);
   if (t < 270.75) {
     ctx.globalAlpha = 1 - ew(t, 270.35, 270.75);
-    M.diver(ctx, x, y, s, M.mixPose(M.POSES.wing, M.POSES.soar, r), Math.sin(t) * 0.1 * (1 - away), P.red, { wings: 1.2 * (1 - away) });
+    // wings wide, rising away into the paper sky: the fall has become flight
+    PH.phoenix(ctx, x, y, s * 1.1, Math.PI, { open: 1, beat: Math.sin(t * 5) * 0.7, t, colors: PH.phoenixColors(P.paper) });
     ctx.globalAlpha = 1;
   }
   // the thin line from the very first frame returns — and breaks open

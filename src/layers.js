@@ -78,7 +78,7 @@ export function cloudField(ctx, S, o = {}) {
     const y = k * gap - off + rnd(seed, k, -0.3, 0.3) * gap + 200;
     const x = rnd(seed, k + 5, -0.05, 1.05) * W;
     const s = rnd(seed, k + 9, 90, 200) * scale;
-    M.cloud(ctx, x, y, s, fillC, seed * 13 + k, { outline: line, lw, shade });
+    M.cloud(ctx, x, y, s, fillC, seed * 13 + k, { outline: line, lw, shade, t: S.t });
   }
   ctx.restore();
 }
@@ -96,7 +96,8 @@ export function flameField(ctx, S, o = {}) {
     const x = rnd(seed, k + 5, -0.05, 1.05) * W;
     const s = rnd(seed, k + 9, 120, 260) * scale;
     M.flame(ctx, x, y, s, t, colors[0], seed + k, { tongues: 3 });
-    M.flame(ctx, x, y + s * 0.02, s * 0.62, t + 3, colors[1], seed + k + 50, { tongues: 2 });
+    M.flame(ctx, x, y + s * 0.02, s * 0.66, t + 3, colors[1], seed + k + 50, { tongues: 2 });
+    if (colors[2]) M.flame(ctx, x, y + s * 0.03, s * 0.34, t + 5, colors[2], seed + k + 90, { tongues: 1 });
   }
   ctx.restore();
 }

@@ -2,6 +2,7 @@
 import { TAU, clamp, lerp, seg, env, ew, ease, mod, h2, rnd, noise1, fract, mix, rgba, mulberry } from './util.js';
 import { P } from './palette.js';
 import * as M from './motifs.js';
+import * as PH from './phoenix.js';
 import { fill, vgrad, mistField, halftoneBands, speed, cloudField, flameField } from './layers.js';
 
 // Chorus line ids and per-chorus colour plans.
@@ -109,6 +110,10 @@ function chorusWorld(ctx, S) {
       frameTunnel(ctx, S, { color: P.ink, alpha: k, lwK: 1.3 });
     }
   }
+  if (ph === 'A' && t - L[c.a].start > 1.6) {
+    // the phoenix rides the endless line of じゆう
+    PH.flyingPhoenix(ctx, S, { bg, s: 84, laneW: S.W * 0.3, seed: 40 + c.v, alpha: ew(t, L[c.a].start + 1.6, L[c.a].start + 2.2), dy: 0 });
+  }
   if (ph === 'A' || ph === 'C') {
     halftoneBands(ctx, S, { color: bg === P.red ? P.redDeep : bg === P.ink ? P.char : P.paperDark, cell: 20, alpha: 0.6, gap: 900 });
     speed(ctx, S, fg, Math.floor(40 + 120 * S.E), { alpha: 0.45, maxW: 4, red: bg === P.red ? P.paperLight : P.red, redEvery: 9 });
@@ -123,9 +128,9 @@ function chorusWorld(ctx, S) {
   if (ph === 'D') {
     const lt = t - L[c.d].start;
     const lineC = bg === P.ink ? P.red : P.ink;
-    cloudField(ctx, S, { par: 0.7, gap: 520, fillC: bg === P.ink ? P.char : P.redDeep, line: null, lw: 0, seed: 70 + c.v, scale: 1.3 });
-    flameField(ctx, S, { par: 1.2, gap: 380, colors: bg === P.ink ? [P.red, P.redDeep] : [P.redHot, P.ink], seed: 90 + c.v, scale: 1.1 });
-    cloudField(ctx, S, { par: 1.8, gap: 460, fillC: P.paperLight, line: lineC, lw: 6, seed: 80 + c.v, scale: 1.2 });
+    cloudField(ctx, S, { par: 0.7, gap: 520, fillC: bg === P.ink ? P.char : P.redDeep, line: null, lw: 0, seed: 70 + c.v, scale: 1.6 });
+    flameField(ctx, S, { par: 1.2, gap: 380, colors: bg === P.ink ? [P.red, '#EE6A2A', P.paperLight] : [P.ink, '#EE6A2A', P.paperLight], seed: 90 + c.v, scale: 1.3 });
+    cloudField(ctx, S, { par: 1.8, gap: 460, fillC: P.paperLight, line: lineC, lw: 6, seed: 80 + c.v, scale: 1.75, shade: bg === P.ink ? P.sand : P.paperDark });
     speed(ctx, S, fg, 90, { alpha: 0.5, maxW: 4 });
   }
 }
@@ -192,10 +197,8 @@ function inst1(ctx, S) {
   const late = ew(t, 104.2, 105.2);
   if (late > 0) M.focusLines(ctx, W, H, W / 2, H / 2, { count: 140, inner: 360, innerVar: 260, color: P.char, frame: Math.floor(t * 12), alpha: late * (0.6 + 0.4 * S.bp) });
   frameTunnel(ctx, S, { color: P.red, lwK: 1.7 });
-  // tumbling figure
-  const u = t - 98.3;
-  const pose = M.mixPose(M.POSES.spread, M.POSES.tuck, 0.5 + 0.5 * Math.sin(u * 1.4));
-  M.diver(ctx, W / 2 + Math.sin(u * 0.9) * 60, H * 0.5 + Math.cos(u * 0.7) * 30, lerp(46, 80, late), pose, u * 2.2, P.paper, { wings: late * 0.8 });
+  // the phoenix threads the frames
+  PH.flyingPhoenix(ctx, S, { bg: P.ink, s: lerp(62, 86, late), laneW: W * 0.22, seed: 11 });
 }
 
 // ------------------------------------------------------------------ verse 2 worlds
@@ -329,7 +332,7 @@ export function crownState(t, W, H) {
   const u = t - 149;
   return {
     cx: W / 2, cy: H * 0.52 + ew(t, 156.8, 158.7, 'inCubic') * H * 0.95,
-    rx: 640 * ew(t, 148.7, 149.5, 'outBack'), ry: 150,
+    rx: 640 * ew(t, 148.7, 149.5, 'outBack'), ry: 185,
     spin: 0.55 * u + 0.09 * u * u,
   };
 }
@@ -349,41 +352,137 @@ function crownWorld(ctx, S) {
     ctx.fillText('囁', h2(41, k + 2) * W, y);
   }
   ctx.restore();
-  // the crown: two rings and spikes, back half dimmer
-  const c = crownState(t, W, H);
+  drawCrown(ctx, S, crownState(t, W, H));
+}
+
+// An ornate crown seen slightly from above: a banded cylinder with bead
+// rows and pinstripes, lancet spires with pierced windows and jewelled
+// finials, scallops between them. Back half first, front half last.
+export function drawCrown(ctx, S, c) {
+  const { t } = S;
   if (c.rx < 2) return;
-  const spikes = 11;
-  const items = [];
-  for (let i = 0; i < spikes; i++) {
-    const a = -c.spin + (i / spikes) * TAU + 0.15;
-    items.push({ a, z: Math.sin(a) });
-  }
-  items.sort((p, q) => p.z - q.z);
-  ctx.save();
-  ctx.lineWidth = 5;
-  ctx.strokeStyle = P.ink;
-  for (const dy of [70, -70]) {
+  const { cx, cy, rx, ry } = c;
+  const hb = 64;
+  const N = 12;
+  const ang = (i) => -c.spin + (i / N) * TAU;
+  const topY = (a) => cy - hb + Math.sin(a) * ry;
+  const botY = (a) => cy + hb + Math.sin(a) * ry;
+  const X = (a, k = 1) => cx + Math.cos(a) * rx * k;
+  const bandHalf = (front) => {
+    const a0 = front ? 0 : Math.PI, a1 = front ? Math.PI : TAU;
     ctx.beginPath();
-    ctx.ellipse(c.cx, c.cy + dy, c.rx * 1.02, c.ry, 0, 0, TAU);
-    ctx.stroke();
-  }
-  for (const it of items) {
-    const x = c.cx + Math.cos(it.a) * c.rx * 1.02, y = c.cy - 70 + Math.sin(it.a) * c.ry;
-    const d = (it.z + 1) / 2;
-    const hgt = lerp(110, 190, d), wd = lerp(18, 46, d) * Math.abs(Math.cos(it.a) * 0.5 + 0.5 * (1 - Math.abs(Math.cos(it.a))) + 0.3);
-    ctx.globalAlpha = lerp(0.3, 1, d);
-    ctx.fillStyle = P.ink;
+    for (let k = 0; k <= 40; k++) { const a = lerp(a0, a1, k / 40); k ? ctx.lineTo(X(a), topY(a)) : ctx.moveTo(X(a), topY(a)); }
+    for (let k = 40; k >= 0; k--) { const a = lerp(a0, a1, k / 40); ctx.lineTo(X(a), botY(a)); }
+    ctx.closePath();
+  };
+  const spire = (i, front) => {
+    const a = ang(i);
+    const z = Math.sin(a);
+    if ((z > 0) !== front) return;
+    const d = (z + 1) / 2;
+    const face = Math.abs(Math.cos(a));
+    const tall = i % 2 ? 0.62 : 1;
+    const x = X(a), y = topY(a);
+    const h = lerp(170, 290, d) * tall;
+    const w = lerp(20, 52, d) * (0.35 + 0.65 * (1 - face * 0.6));
+    const ink = front ? P.ink : P.sand;
+    ctx.fillStyle = ink;
     ctx.beginPath();
-    ctx.moveTo(x - wd, y);
-    ctx.lineTo(x, y - hgt);
-    ctx.lineTo(x + wd, y);
+    ctx.moveTo(x - w, y + 4);
+    ctx.quadraticCurveTo(x - w * 0.95, y - h * 0.55, x, y - h);
+    ctx.quadraticCurveTo(x + w * 0.95, y - h * 0.55, x + w, y + 4);
     ctx.closePath();
     ctx.fill();
-    ctx.fillStyle = P.red;
+    // pierced lancet window + inner rule
+    ctx.fillStyle = front ? P.paper : P.paperDark;
     ctx.beginPath();
-    ctx.arc(x, y - hgt - 12, lerp(6, 14, d), 0, TAU);
+    ctx.moveTo(x - w * 0.42, y - h * 0.12);
+    ctx.quadraticCurveTo(x - w * 0.4, y - h * 0.5, x, y - h * 0.66);
+    ctx.quadraticCurveTo(x + w * 0.4, y - h * 0.5, x + w * 0.42, y - h * 0.12);
+    ctx.closePath();
     ctx.fill();
+    ctx.fillStyle = ink;
+    ctx.beginPath();
+    ctx.arc(x, y - h * 0.34, w * 0.16, 0, TAU);
+    ctx.fill();
+    // jewelled finial
+    const jr = lerp(7, 15, d) * (tall < 1 ? 0.8 : 1);
+    ctx.fillStyle = front ? P.red : P.redDeep;
+    ctx.beginPath();
+    ctx.moveTo(x, y - h - jr * 2.2);
+    ctx.lineTo(x + jr, y - h - jr * 0.9);
+    ctx.lineTo(x, y - h + jr * 0.3);
+    ctx.lineTo(x - jr, y - h - jr * 0.9);
+    ctx.closePath();
+    ctx.fill();
+    if (front) {
+      ctx.fillStyle = P.paperLight;
+      ctx.beginPath();
+      ctx.arc(x - jr * 0.25, y - h - jr * 1.2, jr * 0.22 * (0.6 + 0.4 * Math.sin(t * 6 + i)), 0, TAU);
+      ctx.fill();
+    }
+  };
+  const band = (front) => {
+    bandHalf(front);
+    ctx.fillStyle = front ? P.paperLight : P.paperDark;
+    ctx.fill();
+    ctx.save();
+    bandHalf(front);
+    ctx.clip();
+    // shading toward the sides
+    ctx.fillStyle = rgba(P.sand, front ? 0.5 : 0.8);
+    for (const side of [-1, 1]) {
+      ctx.beginPath();
+      ctx.ellipse(cx + side * rx, cy, rx * 0.22, ry + hb * 2, 0, 0, TAU);
+      ctx.fill();
+    }
+    ctx.restore();
+    const a0 = front ? 0 : Math.PI, a1 = front ? Math.PI : TAU;
+    ctx.strokeStyle = front ? P.ink : P.sand;
+    for (const [dy, lw] of [[0, 5], [12, 1.5], [2 * hb - 12, 1.5], [2 * hb, 5]]) {
+      ctx.lineWidth = lw;
+      ctx.beginPath();
+      for (let k = 0; k <= 40; k++) { const a = lerp(a0, a1, k / 40); const y = topY(a) + dy; k ? ctx.lineTo(X(a), y) : ctx.moveTo(X(a), y); }
+      ctx.stroke();
+    }
+    // bead rows
+    ctx.fillStyle = front ? P.ink : P.sand;
+    for (let k = 0; k < 60; k++) {
+      const a = -c.spin * 1 + (k / 60) * TAU;
+      const z = Math.sin(a);
+      if ((z > 0) !== front) continue;
+      const r = lerp(1.5, 3.4, (z + 1) / 2);
+      for (const dy of [6, 2 * hb - 6]) { ctx.beginPath(); ctx.arc(X(a), topY(a) + dy, r, 0, TAU); ctx.fill(); }
+    }
+    // scallops between the spires, along the top edge
+    ctx.strokeStyle = front ? P.ink : P.sand;
+    ctx.lineWidth = 2.5;
+    for (let i = 0; i < N; i++) {
+      const a = ang(i) + Math.PI / N;
+      if ((Math.sin(a) > 0) !== front) continue;
+      ctx.beginPath();
+      ctx.arc(X(a), topY(a), lerp(10, 24, (Math.sin(a) + 1) / 2), Math.PI, TAU);
+      ctx.stroke();
+    }
+  };
+  ctx.save();
+  // whisper wisps coiling around the crown
+  ctx.strokeStyle = rgba(P.red, 0.45);
+  ctx.lineWidth = 2;
+  for (let w = 0; w < 3; w++) {
+    ctx.beginPath();
+    for (let k = 0; k <= 80; k++) {
+      const u = k / 80;
+      const a = u * TAU * 1.5 + t * (1.2 + w * 0.3) + w * 2;
+      const x = cx + Math.cos(a) * rx * (1.15 + 0.1 * w), y = cy + Math.sin(a) * ry * 1.3 - 160 + u * 360;
+      k ? ctx.lineTo(x, y) : ctx.moveTo(x, y);
+    }
+    ctx.stroke();
   }
+  band(false);
+  for (let i = 0; i < N; i++) spire(i, false);
+  band(true);
+  for (let i = 0; i < N; i++) spire(i, true);
   ctx.restore();
 }
 

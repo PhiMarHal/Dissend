@@ -33,14 +33,14 @@ T.L003 = { // 空の指の間から光が零れる
   pre: 0.05, post: 0.8,
   draw(ctx, S, L, lt, dur) {
     const times = charTimes(L);
-    const size = 70, x = S.W * 0.84, y = S.H * 0.08;
+    const size = 70, x = S.W * 0.08, y = S.H * 0.08;
     const out = ew(lt, dur + 0.1, dur + 0.8, 'inCubic');
     textV(ctx, 'mincho', L.text, x, y, size, { fill: P.ink, lead: 1.08 }, (i) => {
       const ti = times[i] - L.start;
       const a = ew(lt, ti - 0.05, ti + 0.35, 'outCubic');
       if (a <= 0) return false;
       const light = i >= 6; // 光が零れる — light spills
-      return { dy: (1 - a) * -30 + out * 600 * (1 + i * 0.05), alpha: a * (1 - out), fill: light && lt > ti + 0.3 ? P.redDeep : P.ink };
+      return { dy: (1 - a) * -30 + out * 600 * (1 + i * 0.05), alpha: a * (1 - out), fill: light && lt > ti + 0.3 ? P.redHot : P.paperLight };
     });
     // droplets of light spilling from the last glyphs
     const k0 = times[6] - L.start;
@@ -61,7 +61,7 @@ T.L004 = { // Light spills through the fingers of the sky.
   pre: 0.1, post: 0.9,
   draw(ctx, S, L, lt, dur) {
     const rows = [['Light', 230, 'italic'], ['spills through', 92, 'italic'], ['the fingers', 92, 'italic'], ['of the sky.', 92, 'italic']];
-    const x = S.W * 0.62, y0 = S.H * 0.43;
+    const x = S.W * 0.78, y0 = S.H * 0.5;
     const out = ew(lt, dur + 0.1, dur + 0.9, 'inCubic');
     let y = y0;
     rows.forEach(([txt, size, font], r) => {
@@ -74,7 +74,7 @@ T.L004 = { // Light spills through the fingers of the sky.
         ctx.clip();
         const isLight = r === 0;
         textH(ctx, font, txt, x + (r === 0 ? -60 : 40), y + (1 - a) * size + out * 400, size, {
-          fill: isLight ? P.paperLight : P.ink, align: 0.5, stroke: isLight ? P.ink : null, lw: 3,
+          fill: P.paperLight, align: 0.5, stroke: isLight ? P.ink : null, lw: 3,
         }, (i, n) => ({ alpha: 1 - out }));
         ctx.restore();
       }
