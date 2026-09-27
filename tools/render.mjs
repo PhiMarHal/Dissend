@@ -22,8 +22,8 @@ const flag = (name) => argv.includes('--' + name);
 
 const FPS = parseFloat(opt('fps', '60'));
 const SCALE = parseFloat(opt('scale', '1'));
-const CRF = opt('crf', SCALE < 1 ? '23' : '17');
-const PRESET = opt('preset', SCALE < 1 ? 'veryfast' : 'slow');
+const CRF = opt('crf', SCALE < 1 ? '23' : '20');
+const PRESET = opt('preset', SCALE < 1 ? 'veryfast' : 'medium');
 const AUDIO = path.join(ROOT, 'Dissend.webm');
 const DURATION = 271.5;
 
@@ -35,6 +35,10 @@ async function worker() {
   const ff = spawn('ffmpeg', [
     '-v', 'error', '-y',
     '-f', 'rawvideo', '-pix_fmt', 'rgba', '-s', `${video.PW}x${video.PH}`, '-r', String(FPS), '-i', '-',
+    // convert with the BT.709 matrix and tag it, so players reproduce the
+    // exact vermilion instead of guessing a colour space
+    '-vf', 'scale=out_color_matrix=bt709:out_range=tv:flags=accurate_rnd+full_chroma_int',
+    '-color_primaries', 'bt709', '-color_trc', 'bt709', '-colorspace', 'bt709', '-color_range', 'tv',
     '-c:v', 'libx264', '-preset', PRESET, '-crf', CRF, '-tune', 'animation',
     '-pix_fmt', 'yuv420p', '-threads', opt('x264threads', '2'),
     '-x264-params', 'keyint=' + Math.round(FPS * 4),
